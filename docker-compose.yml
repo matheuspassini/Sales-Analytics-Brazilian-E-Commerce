@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  sales-analytics:
+    build: .
+    container_name: sales-analytics
+    volumes:
+      - ./infrastructure:/infrastructure
+      - ./data:/data
+      - ./jobs:/jobs
+    stdin_open: true
+    tty: true
