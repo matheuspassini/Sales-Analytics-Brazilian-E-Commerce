@@ -1,14 +1,14 @@
-# Sales Analytics Data Mesh
+# Sales Analytics Medallion Architecture
 
 ## 📊 Overview
-A comprehensive data analytics solution built on AWS using Data Mesh architecture principles. This project processes retail sales data from Olist (Brazilian e-commerce) using AWS Glue, S3, and PySpark.
+A comprehensive data analytics solution built on AWS using Medallion architecture principles. This project processes retail sales data from Olist (Brazilian e-commerce) using AWS Glue, S3, and PySpark.
 
 ## 🏗️ Architecture
 
-### Data Mesh Components
-- **Sales Domain**: Order data, payments, and customer information
-- **Product Domain**: Product catalog and category mappings
-- **Analytics Domain**: Aggregated metrics and business intelligence
+### Medallion Architecture Components
+- **Bronze Layer**: Raw data from Olist (CSV files)
+- **Silver Layer**: Cleaned and processed data
+- **Gold Layer**: Aggregated business metrics and KPIs
 
 ### AWS Services
 - **S3**: Data storage with Medallion architecture (Bronze → Silver → Gold)

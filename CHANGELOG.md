@@ -15,7 +15,7 @@
 - **Data Processing**: AWS Glue + PySpark (serverless ETL/ELT)
 - **Containerization**: Docker + Ubuntu + AWS CLI v2
 - **Development**: Python3 + Terraform + AWS SDK
-- **Architecture**: Data Mesh principles with Medallion data lake
+- **Architecture**: Medallion data lake architecture (Bronze → Silver → Gold)
 
 ### Data Sources
 - **Olist Brazilian E-commerce Dataset**: [Kaggle Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
