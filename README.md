@@ -1,189 +1,246 @@
-# Sales Analytics Medallion Architecture
+# Sales Analytics Infrastructure
 
-## 📊 Overview
-A comprehensive data analytics solution built on AWS using Medallion architecture principles. This project processes retail sales data from Olist (Brazilian e-commerce) using AWS Glue, S3, and PySpark.
+## 🎯 Project Objective
 
-## 🏗️ Architecture
+This project implements a **Data Lake** infrastructure for **Sales Analytics** using AWS services. The solution provides a solid foundation for data storage, processing, and analytics in sales organizations.
 
-### Medallion Architecture Components
-- **Bronze Layer**: Raw data from Olist (CSV files)
-- **Silver Layer**: Cleaned and processed data
-- **Gold Layer**: Aggregated business metrics and KPIs
+### **What We're Building**
+- **Data Lake Foundation**: Scalable storage with bronze-silver-gold architecture
+- **Data Discovery**: Automated schema detection and metadata management
+- **Data Processing**: ETL capabilities for transforming raw data into business insights
+- **Monitoring**: Comprehensive observability and cost tracking
 
-### AWS Services
-- **S3**: Data storage with Medallion architecture (Bronze → Silver → Gold)
-- **AWS Glue**: ETL/ELT processing with PySpark
-- **IAM**: Secure access control for Glue jobs
-- **CloudWatch**: Monitoring and logging
+### **Target Audience**
+- **Data Engineers**: Building and maintaining data infrastructure
+- **Data Analysts**: Accessing and analyzing sales data
+- **Business Teams**: Making data-driven decisions
+- **DevOps Engineers**: Managing and monitoring infrastructure
+- **Sales Managers**: Understanding customer behavior and performance
 
-### Data Flow
-```
-Raw Data (Bronze) → Processed Data (Silver) → Aggregated Data (Gold)
-     ↓                    ↓                    ↓
-  CSV Files         PySpark Jobs         Business Metrics
-```
+### **Business Value**
+- **Data Centralization**: Single source of truth for sales data
+- **Cost Optimization**: Pay-per-use model with monitoring
+- **Scalability**: Handle growing data volumes without redesign
+- **Compliance**: Secure data handling with audit trails
 
-## 📁 Project Structure
-```
-sales-analytics/
-├── infrastructure/        # Terraform IaC
-│   ├── modules/           # Reusable modules
-│   │   ├── s3/            # S3 bucket and structure
-│   │   │   └── s3_objects/ # S3 objects (Bronze, Silver, Gold)
-│   │   └── iam/           # IAM roles and policies
-│   ├── main.tf            # Main infrastructure
-│   ├── variables.tf       # Variable definitions
-│   ├── terraform.tfvars   # Variable values
-│   ├── providers.tf       # AWS provider configuration
-│   └── outputs.tf         # Output values
-├── data/                  # Raw datasets (Olist + test.txt)
-├── jobs/                  # PySpark scripts (Glue jobs)
-├── Dockerfile             # Container configuration
-├── docker-compose.yml     # Docker services configuration
-├── LICENSE               # MIT License
-├── CHANGELOG.md          # Project history
-└── README.md             # Project documentation
-```
+## 🎯 Architecture Decisions
+
+### **Why Data Lake?**
+- **Flexibility**: Store raw data in various formats (CSV, JSON, Parquet, Avro)
+- **Schema-on-Read**: Apply schema when querying, not when storing
+- **Cost-effective**: Pay only for storage and compute when needed
+- **Foundation**: Provides base infrastructure for Data Mesh evolution
+
+### **Why AWS?**
+- **Managed Services**: Reduce operational overhead
+- **Integration**: Native integration between services
+- **Security**: IAM, VPC, encryption out of the box
+- **Cost Management**: Pay-per-use model with CloudWatch monitoring
+
+### **Why Terraform?**
+- **Infrastructure as Code**: Version control for infrastructure
+- **Modularity**: Reusable modules across environments
+- **State Management**: Track infrastructure changes
+- **AWS Native**: Optimized for AWS services
+
+## 📁 Module Structure
+
+### **S3 Module** (`./modules/s3/`)
+- **Purpose**: Data storage with bronze/silver/gold architecture
+- **Why**: Separation of concerns, data lifecycle management
+- **Benefits**: Cost optimization, data quality control
+
+### **IAM Module** (`./modules/iam/`)
+- **Purpose**: Security and permissions management
+- **Why**: Least privilege principle, secure by default
+- **Benefits**: Compliance, security audit trails
+
+### **Glue Module** (`./modules/glue/`)
+- **Purpose**: Data catalog and ETL orchestration
+- **Why**: Serverless data processing, automatic schema discovery
+- **Benefits**: No infrastructure management, pay-per-use
+
+### **CloudWatch Module** (`./modules/cloudwatch/`)
+- **Purpose**: Monitoring, alerting, and observability
+- **Why**: Proactive issue detection, cost monitoring
+- **Benefits**: Operational excellence, cost optimization
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Docker installed and running
-- AWS CLI configured
-- Access to AWS services (S3, Glue, IAM)
+### **Prerequisites**
+- **AWS Account**: Active AWS account with appropriate permissions
+- **AWS CLI**: Configured with access keys and region
+- **Terraform**: Version 1.0+ installed locally
+- **Docker**: For containerized development environment
+- **Domain Knowledge**: Understanding of sales data and business processes
 
-### Quick Start with Docker
-
-#### 1. Build the Docker Image
+### **Deployment**
 ```bash
-docker build -t sales-analytics-image .
-```
-
-#### 2. Run with Docker Compose
-```bash
-# Start the container
-docker-compose up -d
-
-# Access the container
-docker-compose exec sales-analytics bash
-```
-
-#### 3. Inside the Container
-```bash
-# The /infrastructure directory is already available
-cd /infrastructure
-
-# Configure AWS credentials
-aws configure
-
-
-
 # Initialize Terraform
 terraform init
 
-# Review the plan
+# Plan deployment
 terraform plan
 
-# Apply the infrastructure
+# Apply infrastructure
 terraform apply
 ```
 
-### Data Preparation
-1. **Download Olist Dataset**: Extract the ZIP from Kaggle to `data/` folder
-2. **Verify Structure**: Ensure CSV files are in the correct location
-3. **Run Terraform**: The provisioner will automatically upload data to S3 Bronze layer
+### **Configuration**
+All configuration is centralized in `terraform.tfvars`:
+- AWS region and project settings
+- S3 bucket configuration
+- Glue database and crawler names
+- CloudWatch alarm thresholds
 
-## 📊 Data Sources
+## 🔧 Key Features
 
-### Olist Dataset
-- **Source**: [Brazilian E-commerce Dataset on Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
-- **Download**: Extract the ZIP file and place CSV files in the `data/` folder
-- **Customers**: Customer information and location
-- **Orders**: Order details and status
-- **Products**: Product catalog and categories
-- **Order Items**: Individual items in orders
-- **Payments**: Payment methods and amounts
-- **Reviews**: Customer feedback and ratings
-- **Sellers**: Seller information and performance
+### **Data Lake Layers**
+- **Bronze**: Raw data ingestion (CSV files)
+- **Silver**: Cleaned, validated, and standardized data
+- **Gold**: Aggregated, business-ready data with defined schemas
 
-## 🔧 Configuration
+### **Automated Data Discovery**
+- Glue Crawler automatically discovers data structure
+- Creates tables in Data Catalog
+- Handles schema evolution
 
-### Variables
-- `project_name`: Project identifier
-- `aws_region`: AWS region for deployment
-- `name_bucket`: **S3 bucket name (must be unique globally)**
-- `versioning_bucket`: Enable bucket versioning
-- `files_bucket`: Local scripts folder
-- `files_data`: Local data folder
+### **Monitoring & Alerting**
+- S3 bucket size monitoring
+- Glue crawler success rate tracking
+- Configurable thresholds and periods
 
-### Important Configuration Notes
-- **S3 Bucket Name**: Must be globally unique across all AWS accounts
-- **Example**: `my-sales-analytics-xxxxxxx` or use your company prefix
+### **Security**
+- IAM roles with least privilege principle
+- S3 bucket policies and encryption
+- CloudWatch monitoring and alerting
 
-## 🐳 Docker Details
+## 📊 Data Flow
 
-### Container Contents
-- **Ubuntu Latest**: Base operating system
-- **Terraform 1.6.5**: Infrastructure as Code tool
-- **AWS CLI v2**: AWS command line interface
-- **Python3**: For local development and testing
+1. **Ingestion**: Data files uploaded to S3 bronze layer (any format)
+2. **Discovery**: Glue Crawler scans data and infers schema
+3. **Catalog**: Metadata stored in Glue Data Catalog
+4. **Processing**: ETL jobs will transform data between layers (when implemented)
+5. **Analytics**: Data ready for querying with Athena, Redshift, or other tools
 
-### Volume Mounts
-- **`/infrastructure`**: Project directory (available in container)
-- **AWS Credentials**: Configured via `aws configure` command
+## 🕸️ Data Mesh: Architecture Evolution (Not Replacement)
 
-### Benefits
-- **Consistent Environment**: Same setup across all machines
-- **No Local Installation**: Terraform and AWS CLI included
-- **Isolation**: Clean environment for each deployment
-- **Portability**: Works on any machine with Docker
+### **Why Evolve to Data Mesh?**
 
-## 📈 Data Processing
+Data Mesh **evolves** the existing Data Lake, it doesn't replace it. It's a natural evolution that:
 
-### Bronze Layer (Raw)
-- Original CSV files from Olist
-- No transformations applied
-- Preserves data integrity
+- **Preserves** S3 + Glue + CloudWatch infrastructure
+- **Adds** business domain organization
+- **Improves** data governance and access
+- **Maintains** Data Lake investments
 
-### Silver Layer (Processed)
-- Cleaned and validated data
-- Standardized schemas
-- Business rules applied
+### **Current Architecture (Data Lake)**
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Data Sources  │    │   S3 Data Lake  │    │   AWS Glue      │
+│   (CSV Files)   │───▶│   Bronze Layer  │───▶│   Crawler       │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                       │
+                                ▼                       ▼
+                       ┌─────────────────┐    ┌─────────────────┐
+                       │   Silver Layer  │    │   Data Catalog  │
+                       │  (Cleaned Data) │    │  (Metadata)     │
+                       └─────────────────┘    └─────────────────┘
+                                │
+                                ▼
+                       ┌─────────────────┐
+                       │   Gold Layer    │
+                       │(Business Ready) │
+                       └─────────────────┘
 
-### Gold Layer (Aggregated)
-- Business metrics and KPIs
-- Aggregated by time, category, region
-- Ready for analytics and reporting
+                     ┌───────────────────────────────── ┐
+                     │        Infrastructure            │
+                     │  ┌───────── ┐ ┌─────────────┐    │
+                     │  │CloudWatch│ │     IAM     │    │
+                     │  │Monitoring│ │   Roles     │    │
+                     │  │+ Alerts  │ │ + Policies  │    │
+                     │  │+ Logs    │ │             │    │
+                     │  └───────── ┘ └─────────────┘    │
+                     │  ┌─────────────────────────────┐ │
+                     │  │      AWS Glue               │ │
+                     │  │  Database + Crawler         │ │
+                     │  │  + Trigger + Data Catalog   │ │
+                     │  └─────────────────────────────┘ │
+                     │  ┌─────────────────────────────┐ │
+                     │  │        AWS S3               │ │
+                     │  │  Bucket + Versioning        │ │
+                     │  │  + Encryption + Logging     │ │
+                     │  └─────────────────────────────┘ │
+                     └───────────────────────────────── ┘
+```
 
-## 🔒 Security
+### **Future Evolution (Data Mesh)**
+```
+Same Infrastructure + New Organization
 
-### IAM Roles
-- **Glue S3 Access Role**: Minimal permissions for data processing
-- **S3 Bucket Policy**: Secure access control
-- **Principle of Least Privilege**: Only necessary permissions
+┌───────────────────────────────────────────────────────────┐
+│                    Data Mesh Layer                        │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐          │
+│  │ Sales Domain│ │Customer     │ │Product      │          │
+│  │ (Revenue,   │ │Domain       │ │Domain       │          │
+│  │  Metrics)   │ │(Behavior,   │ │(Catalog,    │          │
+│  │  Analytics) │ │  History)   │ │ Analytics)  │          │
+│  └─────────────┘ └─────────────┘ └─────────────┘          │
+│                                                           │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │              Governance & Quality                   │  │
+│  │         (Policies, Standards, Monitoring)           │  │
+│  │         (Data Contracts, SLA, Ownership)            │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                           │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │              Self-Service Platform                  │  │
+│  │         (Data Catalog, APIs, Documentation)         │  │
+│  │         (Business Users Access Their Data)          │  │
+│  └─────────────────────────────────────────────────────┘  │
+└───────────────────────────────────────────────────────────┘
+```
 
-### Data Protection
-- **S3 Encryption**: Server-side encryption enabled
-- **Versioning**: Data versioning for audit trails
-- **Access Logging**: Comprehensive access monitoring
+### **Evolution Benefits**
+- **Reuses** all existing infrastructure
+- **Adds** domain-based organization (Sales, Customer, Product)
+- **Improves** data governance and quality
+- **Maintains** low costs and scalability
 
+## 🔮 Next Steps
 
-## 📚 Technologies
+### **Phase 1: Data Lake Foundation** ✅ **COMPLETED**
+- ✅ **S3 Data Lake**: Bronze-Silver-Gold architecture implemented
+- ✅ **IAM Security**: Role-based access control configured
+- ✅ **Glue Data Catalog**: Automated data discovery and metadata
+- ✅ **CloudWatch Monitoring**: Observability and alerting
 
-### Core
-- **PySpark**: Distributed data processing
-- **Terraform**: Infrastructure as Code
-- **AWS Glue**: Serverless ETL/ELT
+### **Phase 2: Core Data Processing** 🔄 **NEXT PRIORITY**
+- 🔄 **Glue Jobs**: ETL transformations and data processing
+- 🔄 **Data Quality**: Automated validation and monitoring
+- 🔄 **Data Mesh Evolution**: Organize existing infrastructure by domains
 
-### Data Storage
-- **S3**: Scalable object storage
-- **CSV**: Source data format
+## 🛠️ Maintenance
 
-### Containerization
-- **Docker**: Consistent development environment
-- **Ubuntu**: Linux base image
-- **Multi-tool**: Terraform + AWS CLI + Python
+### **Regular Tasks**
+- Monitor CloudWatch alarms
+- Review IAM permissions
+- Check S3 storage costs
+- Update Terraform modules
+
+### **Troubleshooting**
+- Check CloudWatch logs for errors
+- Verify IAM role permissions
+- Monitor S3 bucket access
+- Review Glue crawler status
+
+## 📚 Resources
+
+- [AWS Data Lake Best Practices](https://aws.amazon.com/solutions/implementations/data-lake-foundation/)
+- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [AWS Glue Developer Guide](https://docs.aws.amazon.com/glue/latest/dg/)
+- [CloudWatch Best Practices](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_best_practices.html)
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
