@@ -39,6 +39,54 @@ resource "aws_iam_role_policy" "glue_s3_access_policy" {
           "${var.s3_bucket_arn}/*",  # Objects
           "${var.s3_bucket_arn}"     # Bucket
         ]
+      },
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
+        ],
+        Effect = "Allow",
+        Resource = [
+          "arn:aws:logs:*:*:/aws-glue/*",
+          "arn:aws:logs:*:*:/aws-glue/*/*"
+        ]
+      },
+      {
+        Action = [
+          "glue:GetDatabase",
+          "glue:GetDatabases",
+          "glue:CreateDatabase",
+          "glue:UpdateDatabase",
+          "glue:DeleteDatabase",
+          "glue:GetTable",
+          "glue:GetTables",
+          "glue:CreateTable",
+          "glue:UpdateTable",
+          "glue:DeleteTable",
+          "glue:BatchCreatePartition",
+          "glue:BatchDeletePartition",
+          "glue:BatchGetPartition",
+          "glue:GetPartition",
+          "glue:GetPartitions",
+          "glue:UpdatePartition",
+          "glue:DeletePartition",
+          "glue:GetUserDefinedFunction",
+          "glue:GetUserDefinedFunctions",
+          "glue:BatchCreatePartition",
+          "glue:BatchDeletePartition",
+          "glue:BatchGetPartition",
+          "glue:GetPartition",
+          "glue:GetPartitions",
+          "glue:UpdatePartition",
+          "glue:DeletePartition",
+          "glue:GetUserDefinedFunction",
+          "glue:GetUserDefinedFunctions"
+        ],
+        Effect = "Allow",
+        Resource = "*"
       }
     ]
   })
